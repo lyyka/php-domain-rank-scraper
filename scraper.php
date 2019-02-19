@@ -54,7 +54,7 @@ class Scraper{
         sleep(2);
     }
 
-    public function getDomainRank($term){
+    public function getDomainRank($term, $wait_for_results_offseet){
 
         // go to dashboard so we can always reference same search field
         $this->driver->get($this->dashboard_url);
@@ -66,11 +66,11 @@ class Scraper{
         $this->driver->findElement(WebDriverBy::id('dashboard_target'))->submit();
 
         // wait for result to load (ajax and other calls)
-        sleep(5);
+        sleep($wait_for_results_offseet);
 
         // return domain rank
         return [
-            'domain_search' => $term,
+            'domain_name' => $term,
             'domain_rank' => $this->driver->findElement(WebDriverBy::cssSelector('#DomainRatingContainer > span'))->getText()
         ];
     }
@@ -85,7 +85,7 @@ $domains = [
 ];
 
 foreach($domains as $domain){
-    $search_obj = $scraper->getDomainRank($domain);
+    $search_obj = $scraper->getDomainRank($domain, 5);
     echo $domain . " / Rank: " . $search_obj['domain_rank'] . '<br />';
 }
 
