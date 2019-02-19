@@ -19,7 +19,7 @@ class Scraper{
 
     // webdriver
     public $host = 'http://127.0.0.1:9515';
-    public $user_firefox = false;
+    
     // credentials
     public $email;
     public $password;
@@ -30,43 +30,42 @@ class Scraper{
     }
 
     public function login(){
-        if ($this->user_firefox)
-        {
-            $this->driver = RemoteWebDriver::create(
-                $this->host, 
-                DesiredCapabilities::firefox()
-            );
-        }
-        else
-        {
-            $this->driver = RemoteWebDriver::create(
-                $this->host, 
-                DesiredCapabilities::chrome()
-            );
-        }
+        $this->driver = RemoteWebDriver::create(
+            $this->host, 
+            DesiredCapabilities::chrome()
+        );
 
         // go to log in page
         $this->driver->get($this->log_in_url);
 
         // fill in the email
-        $this->driver->findElement(WebDriverBy::id('email_input'))->sendKeys($this->email);
+        $this->driver->findElement(WebDriverBy::name('email'))->sendKeys($this->email);
         sleep(1);
+
+        // get pass field for filling and form submission
+        $pass_input = $this->driver->findElement(WebDriverBy::name('password'));
+
         // fill in password
-        $this->driver->findElement(WebDriverBy::name('password'))->sendKeys($this->password);
+        $pass_input->sendKeys($this->password);
         sleep(1);
+
         // submit from password field
-        $this->driver->findElement(WebDriverBy::name('password'))->submit();
+        $pass_input->submit();
         sleep(2);
     }
 
     public function getDomainRank($term){
+
+        // go to dashboard so we can always reference same search field
         $this->driver->get($this->dashboard_url);
+
         // enter search term in the search field
         $this->driver->findElement(WebDriverBy::id('dashboard_target'))->sendKeys($term);
 
         // submit search
         $this->driver->findElement(WebDriverBy::id('dashboard_target'))->submit();
 
+        // wait for result to load (ajax and other calls)
         sleep(5);
 
         // return domain rank
