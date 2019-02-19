@@ -54,7 +54,7 @@ class Scraper{
         sleep(2);
     }
 
-    public function getDomainRank($term, $wait_for_results_offseet){
+    public function getDomainRank($term, $wait_for_results_offset){
 
         // go to dashboard so we can always reference same search field
         $this->driver->get($this->dashboard_url);
@@ -66,7 +66,7 @@ class Scraper{
         $this->driver->findElement(WebDriverBy::id('dashboard_target'))->submit();
 
         // wait for result to load (ajax and other calls)
-        sleep($wait_for_results_offseet);
+        sleep($wait_for_results_offset);
 
         // return domain rank
         return [
