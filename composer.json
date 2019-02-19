@@ -1,0 +1,6 @@
+{
+    "require": {
+        "rmccue/requests": "^1.7",
+        "facebook/webdriver": "^1.6"
+    }
+}
